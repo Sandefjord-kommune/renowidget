@@ -4,146 +4,276 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hentedager for avfall i Sandefjord kommune</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --grønn: #2e7d32;
-      --grønn-lys: #e8f5e9;
-      --grå: #f5f5f5;
-      --kant: #ddd;
-      --tekst: #222;
-      --liten: 0.85rem;
+      --sfj-blå: #004974;
+      --sfj-mørkeblå: #002673;
+      --sfj-lyseblå: #cfe1ec;
+      --sfj-lysflate: #eff5f8;
+      --sfj-rosa: #f8eaf2;
+      --sfj-mørkerosa: #811b58;
+      --sfj-hvit: #fff;
+      --sfj-sort: #000;
+      --sfj-radius: 8px;
+      --sfj-liten: 0.875rem;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      color: var(--tekst);
+      margin: 0;
+      color: var(--sfj-sort);
       background: transparent;
+      font-family: "Roboto", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
     .widget {
-      max-width: 600px;
+      max-width: 840px;
       margin: 0 auto;
-      padding: 1.5rem 1rem;
+      padding: clamp(1rem, 4vw, 2rem);
     }
 
     h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.4rem;
-      color: var(--grønn);
+      margin: 0 0 0.75rem;
+      color: var(--sfj-mørkeblå);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 400;
+      line-height: 1.25;
     }
 
     p.ingress {
-      font-size: var(--liten);
-      color: #555;
-      margin-bottom: 1rem;
+      max-width: 42rem;
+      margin: 0 0 1.75rem;
+      font-size: 1.125rem;
+      line-height: 1.65;
+    }
+
+    .søk-etikett {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--sfj-mørkeblå);
+      font-weight: 700;
     }
 
     .søk-wrapper {
       position: relative;
     }
 
-    #adressefelt {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      font-size: 1rem;
-      border: 2px solid var(--kant);
-      border-radius: 6px;
-      outline: none;
-      transition: border-color 0.2s;
+    .søk-ikon {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--sfj-blå);
+      pointer-events: none;
+      transform: translateY(-50%);
     }
 
-    #adressefelt:focus { border-color: var(--grønn); }
+    #adressefelt {
+      width: 100%;
+      min-height: 3.5rem;
+      padding: 0.9rem 1rem 0.9rem 3.25rem;
+      color: var(--sfj-mørkeblå);
+      background: var(--sfj-hvit);
+      border: 2px solid var(--sfj-blå);
+      border-radius: var(--sfj-radius);
+      outline: none;
+      font: inherit;
+      font-size: 1.125rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #adressefelt::placeholder {
+      color: var(--sfj-blå);
+      opacity: 1;
+    }
+
+    #adressefelt:focus {
+      border-color: var(--sfj-mørkeblå);
+    }
+
+    #adressefelt:focus-visible {
+      outline: 3px solid var(--sfj-sort);
+      outline-offset: 3px;
+      box-shadow: 0 0 0 6px var(--sfj-hvit);
+    }
 
     #forslag {
       position: absolute;
-      top: 100%;
-      left: 0; right: 0;
-      background: #fff;
-      border: 1px solid var(--kant);
-      border-top: none;
-      border-radius: 0 0 6px 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      top: calc(100% + 0.35rem);
+      left: 0;
+      right: 0;
       z-index: 100;
-      max-height: 220px;
+      max-height: 17rem;
+      margin: 0;
+      padding: 0.35rem;
       overflow-y: auto;
+      background: var(--sfj-hvit);
+      border: 2px solid var(--sfj-blå);
+      border-radius: var(--sfj-radius);
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 38, 115, 0.14);
     }
 
     #forslag li {
       list-style: none;
-      padding: 0.6rem 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 5px;
+      color: var(--sfj-mørkeblå);
       cursor: pointer;
-      font-size: 0.95rem;
     }
 
-    #forslag li:hover, #forslag li.aktiv { background: var(--grønn-lys); }
+    #forslag li:hover,
+    #forslag li.aktiv {
+      background: var(--sfj-lyseblå);
+    }
 
     #status {
-      margin-top: 0.8rem;
-      font-size: var(--liten);
-      color: #666;
-      min-height: 1.2em;
+      min-height: 1.5rem;
+      margin-top: 0.75rem;
+      color: var(--sfj-mørkeblå);
+      font-size: var(--sfj-liten);
+    }
+
+    #status[data-laster="true"]::before {
+      display: inline-block;
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-right: 0.5rem;
+      border: 2px solid var(--sfj-lyseblå);
+      border-top-color: var(--sfj-blå);
+      border-radius: 50%;
+      content: "";
+      vertical-align: -0.1rem;
+      animation: roter 0.8s linear infinite;
     }
 
     #resultat {
-      margin-top: 1.2rem;
+      margin-top: 0.75rem;
     }
 
     .adresse-tittel {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 0.8rem;
-      color: #333;
+      margin-bottom: 0.75rem;
+      color: var(--sfj-mørkeblå);
+      font-size: 1.25rem;
+      font-weight: 700;
     }
 
     .fraksjon-liste {
       display: grid;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
     .fraksjon-kort {
-      display: flex;
+      display: grid;
+      grid-template-columns: 3.5rem minmax(0, 1fr);
       align-items: center;
-      gap: 0.8rem;
-      padding: 0.65rem 0.9rem;
-      background: var(--grå);
-      border-radius: 6px;
-      border-left: 4px solid var(--grønn);
+      gap: 1rem;
+      padding: 1rem;
+      color: var(--sfj-mørkeblå);
+      background: var(--sfj-lysflate);
+      border: 1px solid var(--sfj-lyseblå);
+      border-radius: var(--sfj-radius);
     }
 
-    .fraksjon-ikon {
-      width: 36px;
-      height: 36px;
+    .fraksjon-ikonramme {
+      display: grid;
+      width: 3.5rem;
+      height: 3.5rem;
+      place-items: center;
+      color: var(--sfj-blå);
+      background: var(--sfj-hvit);
+      border-radius: 50%;
+    }
+
+    .fraksjon-ikon,
+    .fraksjon-reserveikon {
+      width: 2.5rem;
+      height: 2.5rem;
       object-fit: contain;
-      flex-shrink: 0;
     }
 
     .fraksjon-info { flex: 1; }
 
     .fraksjon-navn {
-      font-weight: 600;
-      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+      font-size: 1.125rem;
+      font-weight: 700;
     }
 
     .neste-dato {
-      font-size: var(--liten);
-      color: #444;
+      color: var(--sfj-sort);
     }
 
     .dato-liste {
-      font-size: 0.78rem;
-      color: #777;
-      margin-top: 2px;
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      color: var(--sfj-mørkeblå);
+      border-top: 1px solid var(--sfj-lyseblå);
+      font-size: var(--sfj-liten);
     }
 
     .ingen-data {
-      font-size: var(--liten);
-      color: #999;
-      font-style: italic;
+      margin: 0;
+      padding: 1rem;
+      color: var(--sfj-mørkeblå);
+      background: var(--sfj-lysflate);
+      border-radius: var(--sfj-radius);
     }
 
-    .feil { color: #c62828; font-size: var(--liten); margin-top: 0.5rem; }
+    .neste-dato.ingen-data {
+      padding: 0;
+      color: var(--sfj-mørkeblå);
+      background: transparent;
+      font-size: var(--sfj-liten);
+    }
+
+    .feil {
+      margin: 0;
+      padding: 1rem;
+      color: var(--sfj-mørkerosa);
+      background: var(--sfj-rosa);
+      border-radius: var(--sfj-radius);
+    }
+
+    .visuelt-skjult {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes roter {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 420px) {
+      .widget { padding-inline: 0.75rem; }
+      p.ingress { font-size: 1rem; }
+      .fraksjon-kort { grid-template-columns: 3rem minmax(0, 1fr); }
+      .fraksjon-ikonramme { width: 3rem; height: 3rem; }
+      .fraksjon-ikon, .fraksjon-reserveikon { width: 2.15rem; height: 2.15rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -151,19 +281,27 @@
   <h2>Når hentes avfallet hos deg?</h2>
   <p class="ingress">Skriv inn adressen din for å se hentedager for ulike avfallstyper i Sandefjord.</p>
 
+  <label class="søk-etikett" for="adressefelt">Finn adressen din</label>
   <div class="søk-wrapper">
+    <svg class="søk-ikon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2" />
+      <path d="m16 16 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
     <input
       type="text"
       id="adressefelt"
       placeholder="F.eks. Hvalfangergata 1, Sandefjord"
       autocomplete="off"
-      aria-label="Adresse"
+      spellcheck="false"
+      aria-autocomplete="list"
+      aria-controls="forslag"
+      aria-expanded="false"
     />
-    <ul id="forslag" hidden></ul>
+    <ul id="forslag" role="listbox" hidden></ul>
   </div>
 
-  <div id="status"></div>
-  <div id="resultat"></div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="resultat" aria-live="polite"></div>
 </div>
 
 <script>
@@ -172,6 +310,24 @@
   const PROXY_BASE   = "https://norkartrenovasjon.azurewebsites.net/proxyserver.ashx";
   const KOMTEK_BASE  = "https://komteksky.norkart.no/MinRenovasjon.Api/api";
   const GEO_URL      = "https://ws.geonorge.no/adresser/v1/sok";
+  const IKON_BASE    = "https://komteksky.norkart.no/MinRenovasjon.Api/Ikoner";
+
+  // Offisielle fraksjonsikoner fra Min Renovasjon, i stedet for emoji som
+  // varierer i uttrykk mellom operativsystemer og nettlesere.
+  const ikoner = Object.freeze({
+    1: `${IKON_BASE}/restavfall.png`,
+    2: `${IKON_BASE}/papir.png`,
+    3: `${IKON_BASE}/matavfall.png`,
+    4: `${IKON_BASE}/glassogmetallemballasje.png`,
+    7: `${IKON_BASE}/plastemballasje.png`,
+    15: `${IKON_BASE}/farligavfall.png`,
+  });
+
+  const reserveIkon = `
+    <svg class="fraksjon-reserveikon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"
+        stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>`;
 
   const felt     = document.getElementById("adressefelt");
   const forslagEl = document.getElementById("forslag");
@@ -185,7 +341,10 @@
   function komtekFetch(path) {
     return fetch(PROXY_BASE + "?server=" + encodeURIComponent(KOMTEK_BASE + path), {
       headers: { "Kommunenr": KOMMUNENR, "RenovasjonAppKey": APP_KEY }
-    }).then(r => r.json());
+    }).then(r => {
+      if (!r.ok) throw new Error(`Norkart svarte med status ${r.status}`);
+      return r.json();
+    });
   }
 
   // ─── Last fraksjoner ved oppstart ────────────────────────────────────────
@@ -211,16 +370,30 @@
       ].join(",")
     });
     const res = await fetch(url);
+    if (!res.ok) throw new Error(`Geonorge svarte med status ${res.status}`);
     const data = await res.json();
     return data.adresser || [];
   }
 
+  function lukkForslag() {
+    forslagEl.hidden = true;
+    felt.setAttribute("aria-expanded", "false");
+    felt.removeAttribute("aria-activedescendant");
+    forslagEl.querySelectorAll("li").forEach(li => {
+      li.classList.remove("aktiv");
+      li.setAttribute("aria-selected", "false");
+    });
+  }
+
   function visForslag(adresser) {
     forslagEl.innerHTML = "";
-    if (!adresser.length) { forslagEl.hidden = true; return; }
+    if (!adresser.length) { lukkForslag(); return; }
 
-    adresser.forEach(a => {
+    adresser.forEach((a, index) => {
       const li = document.createElement("li");
+      li.id = `adresseforslag-${index}`;
+      li.setAttribute("role", "option");
+      li.setAttribute("aria-selected", "false");
       li.textContent = `${a.adressenavn} ${a.nummer}, ${a.postnummer} ${a.poststed}`;
       li.dataset.gatenavn  = a.adressenavn;
       li.dataset.gatekode  = a.adressekode;
@@ -232,12 +405,15 @@
       forslagEl.appendChild(li);
     });
     forslagEl.hidden = false;
+    felt.setAttribute("aria-expanded", "true");
   }
 
   async function velgAdresse(tekst, gatenavn, gatekode, husnr) {
     felt.value = tekst;
-    forslagEl.hidden = true;
-    statusEl.textContent = "Henter kalender…";
+    lukkForslag();
+    statusEl.dataset.laster = "true";
+    statusEl.textContent = "Henter hentedager …";
+    resultatEl.setAttribute("aria-busy", "true");
     resultatEl.innerHTML = "";
 
     try {
@@ -248,11 +424,15 @@
       const path = `/tommekalender/?gatenavn=${encodeURIComponent(gatenavn)}&gatekode=${gatekode}&husnr=${encodeURIComponent(husnr)}&fraDato=${fraDato}&dato=${tilDato}&api-version=2`;
       const kalender = await komtekFetch(path);
 
+      statusEl.removeAttribute("data-laster");
       statusEl.textContent = "";
+      resultatEl.setAttribute("aria-busy", "false");
       visKalender(tekst, kalender);
     } catch (e) {
+      statusEl.removeAttribute("data-laster");
       statusEl.textContent = "";
-      resultatEl.innerHTML = `<p class="feil">Kunne ikke hente kalender. Prøv igjen.</p>`;
+      resultatEl.setAttribute("aria-busy", "false");
+      resultatEl.innerHTML = `<p class="feil" role="alert">Kunne ikke hente hentedagene. Prøv igjen.</p>`;
     }
   }
 
@@ -272,7 +452,7 @@
     });
 
     const html = `
-      <div class="adresse-tittel">${adresse}</div>
+      <div class="adresse-tittel">Hentedager for ${escapeHtml(adresse)}</div>
       <div class="fraksjon-liste">
         ${sortert.map(item => kortHTML(item)).join("")}
       </div>
@@ -283,7 +463,9 @@
   function kortHTML(item) {
     const f = fraksjoner[item.FraksjonId] || { Navn: `Type ${item.FraksjonId}`, Ikon: "" };
     const datoer = (item.Tommedatoer || []).map(d => new Date(d));
-    const kommende = datoer.filter(d => d >= new Date());
+    const iDag = new Date();
+    iDag.setHours(0, 0, 0, 0);
+    const kommende = datoer.filter(d => d >= iDag);
 
     const nesteDato = kommende[0]
       ? `<div class="neste-dato">Neste henting: <strong>${norskDato(kommende[0])}</strong></div>`
@@ -294,18 +476,16 @@
       ? `<div class="dato-liste">Deretter: ${nesteFire.map(norskDato).join(" · ")}</div>`
       : "";
 
-    const ikoner = {
-      1: "♻️", 2: "📰", 3: "🥦", 4: "🍾", 5: "🥤",
-      6: "🏗️", 7: "🧴", 8: "🪵", 9: "👕", 10: "🌿",
-      11: "🔩", 12: "📺", 13: "📦", 14: "🛋️", 15: "⚠️",
-    };
-    const emoji = ikoner[item.FraksjonId] || "🗑️";
+    const ikonUrl = ikoner[item.FraksjonId] || normaliserIkonUrl(f.Ikon);
+    const ikon = ikonUrl
+      ? `<img class="fraksjon-ikon" src="${escapeHtml(ikonUrl)}" alt="" loading="lazy" />`
+      : reserveIkon;
 
     return `
       <div class="fraksjon-kort">
-        <span class="fraksjon-ikon" aria-hidden="true" style="font-size:1.8rem;line-height:1;">${emoji}</span>
+        <span class="fraksjon-ikonramme" aria-hidden="true">${ikon}</span>
         <div class="fraksjon-info">
-          <div class="fraksjon-navn">${f.Navn}</div>
+          <div class="fraksjon-navn">${escapeHtml(f.Navn)}</div>
           ${nesteDato}
           ${datoListe}
         </div>
@@ -322,11 +502,34 @@
     return d.toLocaleDateString("nb-NO", { weekday: "short", day: "numeric", month: "long" });
   }
 
+  function normaliserIkonUrl(url) {
+    if (!url || url.endsWith("/brush.png")) return "";
+
+    try {
+      const ikonUrl = new URL(url.replace(/^http:/, "https:"));
+      const erNorkartIkon = ikonUrl.hostname === "komteksky.norkart.no"
+        && ikonUrl.pathname.startsWith("/MinRenovasjon.Api/Ikoner/");
+      return erNorkartIkon ? ikonUrl.href : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function escapeHtml(verdi) {
+    return String(verdi ?? "").replace(/[&<>'"]/g, tegn => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "'": "&#39;",
+      '"': "&quot;",
+    })[tegn]);
+  }
+
   // ─── Hendelser ───────────────────────────────────────────────────────────
   felt.addEventListener("input", () => {
     clearTimeout(søkeTimer);
     const val = felt.value.trim();
-    if (val.length < 3) { forslagEl.hidden = true; return; }
+    if (val.length < 3) { lukkForslag(); return; }
     søkeTimer = setTimeout(async () => {
       const adresser = await søkAdresse(val).catch(() => []);
       visForslag(adresser);
@@ -334,11 +537,14 @@
   });
 
   felt.addEventListener("blur", () => {
-    setTimeout(() => { forslagEl.hidden = true; }, 150);
+    setTimeout(lukkForslag, 150);
   });
 
   felt.addEventListener("focus", () => {
-    if (forslagEl.children.length) forslagEl.hidden = false;
+    if (forslagEl.children.length) {
+      forslagEl.hidden = false;
+      felt.setAttribute("aria-expanded", "true");
+    }
   });
 
   document.addEventListener("keydown", e => {
@@ -346,10 +552,19 @@
     const items = Array.from(forslagEl.querySelectorAll("li"));
     const aktiv = forslagEl.querySelector(".aktiv");
     let idx = items.indexOf(aktiv);
-    if (e.key === "ArrowDown") { e.preventDefault(); items[Math.min(idx + 1, items.length - 1)]?.classList.add("aktiv"); aktiv?.classList.remove("aktiv"); }
-    if (e.key === "ArrowUp")   { e.preventDefault(); items[Math.max(idx - 1, 0)]?.classList.add("aktiv"); aktiv?.classList.remove("aktiv"); }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const nesteIdx = e.key === "ArrowDown"
+        ? Math.min(idx + 1, items.length - 1)
+        : Math.max(idx - 1, 0);
+      aktiv?.classList.remove("aktiv");
+      aktiv?.setAttribute("aria-selected", "false");
+      items[nesteIdx]?.classList.add("aktiv");
+      items[nesteIdx]?.setAttribute("aria-selected", "true");
+      if (items[nesteIdx]) felt.setAttribute("aria-activedescendant", items[nesteIdx].id);
+    }
     if (e.key === "Enter" && aktiv) aktiv.dispatchEvent(new MouseEvent("mousedown"));
-    if (e.key === "Escape") forslagEl.hidden = true;
+    if (e.key === "Escape") lukkForslag();
   });
 </script>
 </body>
